@@ -29,20 +29,17 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public TokenResponse signup(SignupRequest request) {
+    public void signup(SignupRequest request) {
         String email = request.email();
         if (userRepository.findByEmail(email).isPresent()) {
             throw new ConflictException(ErrorCode.DUPLICATE_EMAIL);
         }
 
-        User user;
         try {
-            user = userRepository.saveAndFlush(new User(email, passwordEncoder.encode(request.password())));
+            userRepository.saveAndFlush(new User(email, passwordEncoder.encode(request.password())));
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException(ErrorCode.DUPLICATE_EMAIL, e);
         }
-
-        return issueTokens(user.getId());
     }
 
     public TokenResponse login(LoginRequest request) {

@@ -23,8 +23,8 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public TokenResponse signup(@Valid @RequestBody SignupRequest request) {
-        return authService.signup(request);
+    public void signup(@Valid @RequestBody SignupRequest request) {
+        authService.signup(request);
     }
 
     @PostMapping("/login")
